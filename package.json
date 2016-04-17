@@ -12,5 +12,13 @@
   },
   "license": "MIT",
   "description": "WIP sequencer module",
-  "author": "Cole Willsea <coleww@gmail.com> (http://colewillsea.com/)"
+  "author": "Cole Willsea <coleww@gmail.com> (http://colewillsea.com/)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coleww/spiderbite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coleww/spiderbite/issues"
+  },
+  "homepage": "https://github.com/coleww/spiderbite#readme"
 }
