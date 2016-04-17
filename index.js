@@ -42,6 +42,9 @@ module.exports = function (currentSong) {
     },
     stop: function () {
       clearInterval(interval)
+    },
+    update: function (key, val) {
+      song[key] = val
     }
   }
 }
