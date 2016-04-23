@@ -32,7 +32,7 @@ module.exports = function (currentSong) {
             pattern.currentTick = 0
             pattern.currentVersion = pick(pattern.nexts[pattern.currentVersion])
             if (instrument.lead) {
-              if (nextSong) song = nextSong, nextSong = null
+              // if (nextSong) song = nextSong, nextSong = null
               song.current = pick(song.nexts[song.current])
               if (!song.current) alert('it is over')
             }
