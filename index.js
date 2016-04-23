@@ -44,8 +44,7 @@ module.exports = function (currentSong) {
       clearInterval(interval)
       interval = null
     },
-    // FOR NOW: just stop, update entire thing, then restart?
-    update: function (newSong) {
+    updateSong: function (newSong) {
       song = newSong
     }
   }
