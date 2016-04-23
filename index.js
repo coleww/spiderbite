@@ -12,7 +12,7 @@ function roll (prob) {
 // - randos? flipsies?
 
 module.exports = function (currentSong) {
-  var interval, nextSong, globalTick = 0, song = currentSong
+  var interval, globalTick = 0, song = currentSong
   return {
     start: function () {
       if (interval) throw('wtf')
@@ -42,9 +42,11 @@ module.exports = function (currentSong) {
     },
     stop: function () {
       clearInterval(interval)
+      interval = null
     },
-    update: function (key, val) {
-      song[key] = val
+    // FOR NOW: just stop, update entire thing, then restart?
+    update: function (newSong) {
+      song = newSong
     }
   }
 }
