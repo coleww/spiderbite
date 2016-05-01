@@ -3,15 +3,15 @@ module.exports = function (bpm) {
     bpm: bpm,
     interval: undefined,
     tick: 0, // increments each interval
-    current: 0, // which pattern for each inst (verse, chorus, etc.)
+    current: 0, // which section for each inst (verse, chorus, etc.)
     instruments: [], // the instruments, lol
     structure: undefined, // how to jump between the larger patterns
 
     start: function () {
-      if (!this.instruments.length) throw new YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError('no data is bound')
-      if (!this.structure) throw new YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError('no structure is bound')
-      if (this.interval) throw new YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError('oops u tried to start another loop, way to go Steve Reich smdh')
-      if (!this.instruments.some(instrument => instrument.lead)) throw new YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError('a lead instrument must be bound')
+      if (!this.instruments.length) throw new YouGotBitError('no data is bound')
+      if (!this.structure) throw new YouGotBitError('no structure is bound')
+      if (this.interval) throw new YouGotBitError('oops u tried to start another loop, way to go Steve Reich smdh')
+      if (!this.instruments.some(instrument => instrument.lead)) throw new YouGotBitError('a lead instrument must be bound')
 
       this.interval = setInterval(() => {
         // advance the global counter
@@ -19,38 +19,46 @@ module.exports = function (bpm) {
 
         this.instruments.forEach(instrument => {
 
-          // grab the current pattern for this instrument (verse, chorus, etc.)
-          var pattern = instrument.data[this.current]
+          // grab the current section for this instrument (verse, chorus, etc.)
+          var section = instrument.data[this.current]
 
-          // if the pattern has a modulus value, see if this is it is on beat
+          // if the section has a modulus value, see if this is it is on beat
           // i.e, mod 1: every beat, mod 2: every other beat
           // useful for creating breakdowns and bass drops
-          var onItsBeat = this.tick % (pattern.mod || 1) === 0
+          var onItsBeat = this.tick % (section.mod || 1) === 0
 
           // if the instrument is on it's beat, and wins the dice roll
-          if (onItsBeat && roll(pattern.probs[pattern.current][pattern.tick])) {
+          if (onItsBeat && roll(section.probs[section.current][section.tick])) {
 
-            // play the instrument, passing along a randomly chosen note if one is available for that beat
-            instrument.play(pattern.notes ? pick(pattern.notes[pattern.current][pattern.tick]) : undefined)
+            // play the instrument, passing along a randomly chosen data  for that beat
+            instrument.play(pick(section.data[section.current][section.tick]))
           }
 
-          // advance the counter for this pattern
-          if (onItsBeat) pattern.tick++
+          // advance the counter for this section
+          if (onItsBeat) section.tick++
 
-          // if we are at the end of a pattern
-          if (pattern.tick === pattern.probs[pattern.current].length) {
+          // if we are at the end of a section
+          if (section.tick === section.probs[section.current].length) {
 
             // reset the counter
-            pattern.tick = 0
+            section.tick = 0
 
-            // pick a new internal pattern to play
-            pattern.current = pick(pattern.nexts[pattern.current])
+            // pick a new pattern to play
+            section.current = pick(section.nexts[section.current])
 
-            //
+            // if the instrument is the lead
             if (instrument.lead) {
-              this.current = pick(this.nexts[this.current])
-              if (typeof this.current !== 'number') {
 
+              // ... pick a new section to play
+              this.current = pick(this.nexts[this.current])
+
+              // if the new section is null or some other junk
+              if (typeof this.current !== 'number') {
+                // the end of the song! erm, what to do here?
+                // might want to be able to attach an onEnd callback thing
+                // especially for mediaRecorder...
+                this.stop()
+                console.log('SONG IS DONE')
               }
             }
           }
@@ -66,22 +74,38 @@ module.exports = function (bpm) {
     bind: function (lead, cb, data) {
 
       // if this instrument is labelled a "lead" but we already have a lead, that's a boo-boo
-      if (lead && this.instruments.some(instrument => instrument.lead)) throw new YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError('a lead instrument is already bound')
+      if (lead && this.instruments.some(instrument => instrument.lead)) throw new YouGotBitError('a lead instrument is already bound')
 
       // check to see that every existing instrument in the sequencer...
       if (this.instruments.length) {
 
-          // has the same number of larger patterns as the data being added...
-        if (this.instruments.some(inst => inst.data.length !== data.length)) throw new YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError('data does not match existing data')
+        // has the same number of larger patterns as the data being added...
+        if (this.instruments.some(inst => inst.data.length !== data.length)) throw new YouGotBitError('data does not match existing data')
       }
 
       // if there is a structure bound, ...
       if (this.structure) {
 
         // ... check to see that it has as many patterns as there are in the bound data
-        if (this.structure.length !== data.length) throw new YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError('data does not match existing structure')
+        if (this.structure.length !== data.length) throw new YouGotBitError('data does not match existing structure')
       }
+
       // check that the data is valid, note/prob/next-wise
+      var itIsGood = data.every((pattern) => {
+        if (!(pattern.data.length === pattern.probs.length && pattern.data.length === pattern.nexts.length)) {
+          throw new YouGotBitError('data/probs/nexts external mismatch')
+        }
+        if (pattern.nexts.some(i => i >= pattern.probs.length || i < 0)) {
+          throw new YouGotBitError('nexts points to non-existent pattern')
+        }
+        return pattern.probs.every((loop, i) => {
+          return loop.length === pattern.data[i].length
+        })
+      })
+
+      if (!itIsGood) throw new YouGotBitError('data/probs internal mismatch')
+
+      // if we have made it this far, push forward!
       this.instruments.push({data: data, play: cb, lead: lead})
     },
 
@@ -103,10 +127,10 @@ function roll (prob) {
   return Math.random() < prob
 }
 
-function YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError (msg) {
-  this.name = 'YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError'
+function YouGotBitError (msg) {
+  this.name = 'YouGotBitError'
   this.message = msg
 }
 
-YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError.prototype = new Error()
-YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError.prototype.constructor = YouGotHitByYouGotStruckByYouGotBitByASmoothDubstepCriminalSpiderYoWatchOutTakeSomeVitaminsForThatOrSomethingError
+YouGotBitError.prototype = new Error()
+YouGotBitError.prototype.constructor = YouGotBitError
