@@ -111,9 +111,8 @@ module.exports = function (bpm) {
 
     setStructure: function (data) {
       if (this.instruments.length) {
-        // check that this data has the same # of stuff as that data
+        if (this.instruments[0].data.length !== data.length) throw new YouGotBitError('structure does not match existing data')
       }
-      // check that the data is valid, note/prob/next-wise
       this.structure = data
     }
   }

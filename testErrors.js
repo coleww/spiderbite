@@ -77,6 +77,19 @@ tap.test('fails when trying to bind data that does not match existing structure'
   }
 })
 
+tap.test('fails when trying to bind structure that does not match existing data', function (t) {
+  t.plan(1)
+
+  var spiderbite = sb({bpm: 120})
+  spiderbite.bind(true, function () {}, [{data: [[[1]]], probs: [[1]], nexts: [[0]]}])
+
+  try {
+    spiderbite.setStructure([[0], [1]])
+  } catch (e) {
+    t.equal(e.message, 'structure does not match existing data')
+  }
+})
+
 tap.test('fails if the data, probs, or nexts are not the same length', function (t) {
   t.plan(3)
 
