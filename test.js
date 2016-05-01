@@ -157,7 +157,7 @@ tap.test('fails if the data and probs do not align internally', function (t) {
   try {
     spiderbite.bind(function () {}, [{
       data: [
-        [[1, 0]]
+        [[1, 0], [1]]
       ],
       probs: [
         [0]
@@ -199,7 +199,7 @@ tap.test('fails if the data and probs do not align on pattern length', function 
   try {
     spiderbite.bind(function () {}, [{
       data: [
-        [[1], [1]]
+        [[1]], [[1]]
       ],
       probs: [
         [0]
