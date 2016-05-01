@@ -11,16 +11,23 @@ function roll (prob) {
 // - modulus
 // - randos? flipsies?
 
-module.exports = function (currentSong) {
-  var interval, globalTick = 0, song = currentSong
+module.exports = function (bpm) {
+  var interval, globalTick = 0, current = 0, instruments = [], structure
   return {
     start: function () {
-      if (interval) throw('wtf')
+      // check if bound data is all gonna be chill!
+      // no wait u did that already?
+      if (!instruments.length) throw('no data is bound')
+      if (!structure) throw('no structure is bound')
+      if (interval) throw('oops u tried to start another loop, way to go Steve Reich smdh')
+
+
+
+
       interval = setInterval(function () {
         globalTick++
-        Object.keys(song.instruments).forEach(function (k) {
-          var instrument = song.instruments[k]
-          var pattern = instrument.patterns[song.current]
+        instruments.forEach(function (instrument) {
+          var pattern = instrument.data[song.current]
 
           var onItsBeat = globalTick % (pattern.mod || 1) == 0
 
@@ -44,8 +51,15 @@ module.exports = function (currentSong) {
       clearInterval(interval)
       interval = null
     },
-    updateSong: function (newSong) {
-      song = newSong
+    bind: function (cb, data) {
+      if (instruments.length) {
+        // check that this data has the same # of stuff as that data
+      }
+      // check that the data is valid, note/prob/next-wise
+      instruments.push({data: data, play: cb})
+    },
+    setStructure: function () {
+
     }
   }
 }
