@@ -47,7 +47,7 @@ seq.bind(true, function (data, index) {
   }
 ])
 
-seq.setStructure([[0, 0, 0, 1], [1]])
+seq.setStructure([[0, 0, 0, 1], [1, 1, null]])
 
 seq.start()
 // seq.stop()

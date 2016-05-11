@@ -6,12 +6,17 @@ module.exports = function (args) {
     current: 0, // which section for each inst (verse, chorus, etc.)
     instruments: [], // the instruments, lol
     structure: undefined, // how to jump between the larger patterns
-
+    onEnd: undefined, // called when the structure hits a `null`
     start: function () {
+      // make a list, check it twice,
       if (!this.instruments.length) throw new YouGotBitError('no data is bound')
       if (!this.structure) throw new YouGotBitError('no structure is bound')
       if (this.interval) throw new YouGotBitError('oops u tried to start another loop, way to go Steve Reich smdh')
       if (!this.instruments.some(instrument => instrument.lead)) throw new YouGotBitError('a lead instrument must be bound')
+
+      // make the lead instrument be last, to simplify advancing the sequence later
+      this.instruments.sort((a, b) => a.lead ? 1 : (b.lead ? -1 : 0))
+
       this.interval = setInterval(() => {
         // advance the global counter
         this.tick++
@@ -113,12 +118,6 @@ module.exports = function (args) {
         if (this.instruments[0].data.length !== data.length) throw new YouGotBitError('structure does not match existing data')
       }
       this.structure = data
-    },
-
-    // called when the sequencer hits a `null` next pattern.
-    // IS NOT CALLED if you call `.stop()` manually. call it yrself in this case i guess
-    onEnd: function (cb) {
-      this.onEnd = cb
     }
   }
 }
