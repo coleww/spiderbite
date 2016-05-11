@@ -30,7 +30,7 @@ module.exports = function (args) {
           if (onItsBeat && roll(section.probs[section.current][section.tick])) {
 
             // play the instrument, passing along a randomly chosen data  for that beat
-            instrument.play(pick(section.data[section.current][section.tick]))
+            instrument.play(pick(section.data[section.current][section.tick]), section.tick)
           }
 
           // advance the counter for this section
@@ -57,7 +57,7 @@ module.exports = function (args) {
                 // might want to be able to attach an onEnd callback thing
                 // especially for mediaRecorder...
                 this.stop()
-                console.log('SONG IS DONE')
+                this.onEnd()
               }
             }
           }
@@ -113,6 +113,12 @@ module.exports = function (args) {
         if (this.instruments[0].data.length !== data.length) throw new YouGotBitError('structure does not match existing data')
       }
       this.structure = data
+    },
+
+    // called when the sequencer hits a `null` next pattern.
+    // IS NOT CALLED if you call `.stop()` manually. call it yrself in this case i guess
+    onEnd: function (cb) {
+      this.onEnd = cb
     }
   }
 }

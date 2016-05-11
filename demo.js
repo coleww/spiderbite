@@ -1,13 +1,10 @@
 var seq = require('./')({bpm: 200}) // './'' => 'spiderbite'
 window.AudioContext = window.AudioContext || window.webkitAudioContext
-var ac = new AudioContext()
+var ac = new window.AudioContext()
 var pie = require('pie-ano')(ac)
 pie.connect(ac.destination)
 
-
-
-
-seq.bind(true, function (data, index, array) {
+seq.bind(true, function (data, index) {
   // here, just using the data value to play a midi note.
   // might also map it to a scale, or do other stuff, or whatever u want really GET WILD
   console.log(data)
