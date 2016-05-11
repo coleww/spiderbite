@@ -1,6 +1,6 @@
-module.exports = function (bpm) {
+module.exports = function (args) {
   return {
-    bpm: bpm,
+    bpm: args.bpm,
     interval: undefined,
     tick: 0, // increments each interval
     current: 0, // which section for each inst (verse, chorus, etc.)
@@ -12,7 +12,6 @@ module.exports = function (bpm) {
       if (!this.structure) throw new YouGotBitError('no structure is bound')
       if (this.interval) throw new YouGotBitError('oops u tried to start another loop, way to go Steve Reich smdh')
       if (!this.instruments.some(instrument => instrument.lead)) throw new YouGotBitError('a lead instrument must be bound')
-
       this.interval = setInterval(() => {
         // advance the global counter
         this.tick++
@@ -50,7 +49,7 @@ module.exports = function (bpm) {
             if (instrument.lead) {
 
               // ... pick a new section to play
-              this.current = pick(this.nexts[this.current])
+              this.current = pick(this.structure[this.current])
 
               // if the new section is null or some other junk
               if (typeof this.current !== 'number') {
