@@ -26,8 +26,8 @@ the probability of something happening on a given beat. our simple dance rock be
 - hat   [0.5, 1, 0.5, 1]
 - kick  [1,   0, 0,   0]
 
-this module tries to do this sort of logic at every level possible of the song structure
+...
 
-### DOCS
+...
 
-- i am bad at explaining how this thing works. sorry. demo.js might help, or open an issue
+...
