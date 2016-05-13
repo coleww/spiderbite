@@ -7,6 +7,12 @@ module.exports = function (args) {
     instruments: [], // the instruments, lol
     structure: undefined, // how to jump between the larger patterns
     onEnd: undefined, // called when the structure hits a `null`
+    comparator: function (random, prob) { // called to see if an instrument should be played, can be overwritten
+      return random < prob
+    },
+    _roll: function (prob) {
+      return this.comparator(Math.random(), prob)
+    },
     start: function () {
       // make a list, check it twice,
       if (!this.instruments.length) throw new YouGotBitError('no data is bound')
@@ -32,7 +38,7 @@ module.exports = function (args) {
           var onItsBeat = this.tick % (section.mod || 1) === 0
 
           // if the instrument is on it's beat, and wins the dice roll
-          if (onItsBeat && roll(section.probs[section.current][section.tick])) {
+          if (onItsBeat && this._roll(section.probs[section.current][section.tick])) {
 
             // play the instrument, passing along a randomly chosen data  for that beat
             instrument.play(pick(section.data[section.current][section.tick]), section.tick)
@@ -124,10 +130,6 @@ module.exports = function (args) {
 
 function pick (arr) {
   return arr[~~(Math.random() * arr.length)]
-}
-
-function roll (prob) {
-  return Math.random() < prob
 }
 
 function YouGotBitError (msg) {
