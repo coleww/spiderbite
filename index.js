@@ -62,7 +62,7 @@ module.exports = function (args) {
                 // might want to be able to attach an onEnd callback thing
                 // especially for mediaRecorder...
                 this.stop()
-                this.onEnd()
+                if (this.onEnd) this.onEnd()
               }
             }
           }
