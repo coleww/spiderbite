@@ -1,8 +1,11 @@
 module.exports = function (args) {
+  args = args || {}
   return {
-    bpm: args.bpm,
+    bpm: args.bpm || 120,
+    advanceMod: args.advanceMod || 1,
     interval: undefined,
-    tick: 0, // increments each interval
+    counter: 0, // increments each loop
+    tick: 0, // increments each interval/beat
     current: 0, // which section for each inst (verse, chorus, etc.)
     instruments: [], // the instruments, lol
     structure: undefined, // how to jump between the larger patterns
@@ -50,7 +53,7 @@ module.exports = function (args) {
           // if we are at the end of a section
           if (section.tick === section.probs[section.current].length) {
 
-            // reset the counter
+            // reset the counter for this section
             section.tick = 0
 
             // pick a new pattern to play
@@ -58,9 +61,13 @@ module.exports = function (args) {
 
             // if the instrument is the lead
             if (instrument.lead) {
+              this.counter++ // advance the loop counter
 
-              // ... pick a new section to play
-              this.current = pick(this.structure[this.current])
+              // if we have played the loop some number of increments of the advanceModulus...
+              if (this.counter % this.advanceMod === 0) {
+                // ... pick a new section to play
+                this.current = pick(this.structure[this.current])
+              }
 
               // if the new section is null or some other junk
               if (typeof this.current !== 'number') {
