@@ -10,6 +10,7 @@ module.exports = function (args) {
     _instruments: [], // the instruments, lol
     _structure: undefined, // how to jump between the larger patterns
     onEnd: undefined, // called when the structure hits a `null`
+    onSectionStart: undefined, // called when a pattern begins, passed a boolean that designates whether or not the section will update at the end of the current one
     comparator: function (random, prob) { // called to see if an instrument should be played, can be overwritten
       return random < prob
     },
@@ -47,6 +48,11 @@ module.exports = function (args) {
             instrument.play(pick(section.data[section._current][section._tick]), section)
           }
 
+          if (instrument.lead && onItsBeat && section._tick === 0 && ((this._counter + 1) % this.advanceMod === 0)) {
+            this._nextCurrent = pick(this._structure[this._current])
+            if (this.onSectionStart) this.onSectionStart(this._current !== this._nextCurrent)
+          }
+
           // advance the counter for this section
           if (onItsBeat) section._tick++
 
@@ -66,7 +72,7 @@ module.exports = function (args) {
               // if we have played the loop some number of increments of the advanceModulus...
               if (this._counter % this.advanceMod === 0) {
                 // ... pick a new section to play
-                this._current = pick(this._structure[this._current])
+                this._current = this._nextCurrent
               }
 
               // if the new section is null or some other junk
