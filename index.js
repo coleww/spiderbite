@@ -2,6 +2,7 @@ module.exports = function (args) {
   args = args || {}
   return {
     bpm: args.bpm || 120,
+    key: args.key || {tonic: 'C4', scale: 'major'},
     advanceMod: args.advanceMod || 1,
     interval: undefined,
     counter: 0, // increments each loop
@@ -43,8 +44,8 @@ module.exports = function (args) {
           // if the instrument is on it's beat, and wins the dice roll
           if (onItsBeat && this._roll(section.probs[section.current][section.tick])) {
 
-            // play the instrument, passing along a randomly chosen data  for that beat
-            instrument.play(pick(section.data[section.current][section.tick]), section.tick)
+            // play the instrument, passing along a randomly chosen data  for that beat, along with the entire section object, and some config u might need
+            instrument.play(pick(section.data[section.current][section.tick]), section, {bpm: this.bpm, key: this.key})
           }
 
           // advance the counter for this section
