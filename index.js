@@ -41,23 +41,23 @@ module.exports = function (args) {
           var onItsBeat = this._tick % (section.mod || 1) === 0
 
           // if the instrument is on it's beat, and wins the dice roll
-          if (onItsBeat && this._roll(section.probs[section.current][section.tick])) {
+          if (onItsBeat && this._roll(section.probs[section._current][section._tick])) {
 
             // play the instrument, passing along a randomly chosen data  for that beat, along with the entire section object, and some config u might need
-            instrument.play(pick(section.data[section.current][section.tick]), section)
+            instrument.play(pick(section.data[section._current][section._tick]), section)
           }
 
           // advance the counter for this section
-          if (onItsBeat) section.tick++
+          if (onItsBeat) section._tick++
 
           // if we are at the end of a section
-          if (section.tick === section.probs[section.current].length) {
+          if (section._tick === section.probs[section._current].length) {
 
             // reset the counter for this section
-            section.tick = 0
+            section._tick = 0
 
             // pick a new pattern to play
-            section.current = pick(section.nexts[section.current])
+            section._current = pick(section.nexts[section._current])
 
             // if the instrument is the lead
             if (instrument.lead) {
@@ -121,6 +121,13 @@ module.exports = function (args) {
       })
 
       if (!itIsGood) throw new YouGotBitError('data/probs internal mismatch')
+
+      // add internal counter things to the bound data
+      data = data.map(pattern => {
+        pattern._current = 0
+        pattern._tick = 0
+        return pattern
+      })
 
       // if we have made it this far, push forward!
       this._instruments.push({data: data, play: cb, lead: lead})
