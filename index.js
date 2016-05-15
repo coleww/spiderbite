@@ -38,12 +38,12 @@ module.exports = function (args) {
           // if the section has a modulus value, see if this is it is on beat
           // i.e, mod 1: every beat, mod 2: every other beat
           // useful for creating breakdowns and bass drops
-          var onItsBeat = this._tick % (section.mod || 1) === 0
+          var onItsBeat = this._tick % (section.config.mod || 1) === 0
 
           // if the instrument is on it's beat, and wins the dice roll
           if (onItsBeat && this._roll(section.probs[section._current][section._tick])) {
 
-            // play the instrument, passing along a randomly chosen data  for that beat, along with the entire section object, and some config u might need
+            // play the instrument, passing along a randomly chosen data  for that beat, along with the entire section object
             instrument.play(pick(section.data[section._current][section._tick]), section)
           }
 

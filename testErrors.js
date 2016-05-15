@@ -108,9 +108,9 @@ tap.test('fails if the data, probs, or nexts are not the same length', function 
       nexts: [
         [1], [0]
       ],
-      mod: 1,
-      current: 0,
-      tick: 0
+      config: {
+        mod: 1
+      }
     }])
   } catch (e) {
     t.equal(e.message, 'data/probs/nexts external mismatch')
@@ -128,9 +128,9 @@ tap.test('fails if the data, probs, or nexts are not the same length', function 
       nexts: [
         [1], [0], [2]
       ],
-      mod: 1,
-      current: 0,
-      tick: 0
+      config: {
+        mod: 1
+      }
     }])
   } catch (e) {
     t.equal(e.message, 'data/probs/nexts external mismatch')
@@ -150,9 +150,9 @@ tap.test('fails if the data, probs, or nexts are not the same length', function 
       nexts: [
         [1], [0]
       ],
-      mod: 1,
-      current: 0,
-      tick: 0
+      config: {
+        mod: 1
+      }
     }])
   } catch (e) {
     t.equal(e.message, 'data/probs/nexts external mismatch')
@@ -175,9 +175,9 @@ tap.test('fails if the nexts point to non-existent patterns', function (t) {
       nexts: [
         [1]
       ],
-      mod: 1,
-      current: 0,
-      tick: 0
+      config: {
+        mod: 1
+      }
     }])
   } catch (e) {
     t.equal(e.message, 'nexts points to non-existent pattern')
@@ -199,9 +199,9 @@ tap.test('fails if the data and probs do not align internally', function (t) {
       nexts: [
         [0]
       ],
-      mod: 1,
-      current: 0,
-      tick: 0
+      config: {
+        mod: 1
+      }
     }])
   } catch (e) {
     t.equal(e.message, 'data/probs internal mismatch')
@@ -217,9 +217,9 @@ tap.test('fails if the data and probs do not align internally', function (t) {
       nexts: [
         [0]
       ],
-      mod: 1,
-      current: 0,
-      tick: 0
+      config: {
+        mod: 1
+      }
     }])
   } catch (e) {
     t.equal(e.message, 'data/probs internal mismatch')
@@ -241,9 +241,9 @@ tap.test('fails if the data and probs do not align on pattern length', function 
       nexts: [
         [0]
       ],
-      mod: 1,
-      current: 0,
-      tick: 0
+      config: {
+        mod: 1
+      }
     }])
   } catch (e) {
     t.equal(e.message, 'data/probs/nexts external mismatch')
@@ -259,9 +259,9 @@ tap.test('fails if the data and probs do not align on pattern length', function 
       nexts: [
         [0]
       ],
-      mod: 1,
-      current: 0,
-      tick: 0
+      config: {
+        mod: 1
+      }
     }])
   } catch (e) {
     t.equal(e.message, 'data/probs/nexts external mismatch')
@@ -278,9 +278,9 @@ tap.test('fails if the data and probs do not align on pattern length', function 
       nexts: [
         [0], [0]
       ],
-      mod: 1,
-      current: 0,
-      tick: 0
+      config: {
+        mod: 1
+      }
     }])
   } catch (e) {
     t.equal(e.message, 'data/probs/nexts external mismatch')

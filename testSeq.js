@@ -17,7 +17,9 @@ tap.test('runs for 4 ticks and then stops, playing 4 notes', function (t) {
       nexts: [
         [0]
       ],
-      mod: 1
+      config: {
+        mod: 1
+      }
   }])
   spiderbite.setStructure([[null]])
   spiderbite.onEnd = function () {
@@ -41,7 +43,9 @@ tap.test('runs for 4 ticks and then stops, playing 0 notes', function (t) {
       nexts: [
         [0]
       ],
-      mod: 1
+      config: {
+        mod: 1
+      }
   }])
   spiderbite.setStructure([[null]])
   spiderbite.onEnd = function () {
@@ -65,7 +69,9 @@ tap.test('runs through different sections', function (t) {
       nexts: [
         [0]
       ],
-      mod: 1
+      config: {
+        mod: 1
+      }
   },
   {
       data: [
@@ -77,7 +83,9 @@ tap.test('runs through different sections', function (t) {
       nexts: [
         [0]
       ],
-      mod: 1
+      config: {
+        mod: 1
+      }
   }])
   spiderbite.setStructure([[1], [null]])
   spiderbite.onEnd = function () {
@@ -101,7 +109,9 @@ tap.test('runs through different sections of multiple stuff dealing with modulus
       nexts: [
         [0]
       ],
-      mod: 2
+      config: {
+        mod: 2
+      }
   }])
   spiderbite.bind(false, function (data, section) {
     t.equal(data, section._tick)
@@ -115,7 +125,9 @@ tap.test('runs through different sections of multiple stuff dealing with modulus
       nexts: [
         [0]
       ],
-      mod: 1
+      config: {
+        mod: 1
+      }
   }])
 
   spiderbite.setStructure([[null]])
