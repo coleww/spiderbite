@@ -6,7 +6,7 @@ module.exports = function (args) {
     _interval: undefined,
     _counter: 0, // increments each loop
     _tick: 0, // increments each interval/beat
-    current: 0, // which section for each inst (verse, chorus, etc.)
+    _current: 0, // which section for each inst (verse, chorus, etc.)
     _instruments: [], // the instruments, lol
     _structure: undefined, // how to jump between the larger patterns
     onEnd: undefined, // called when the structure hits a `null`
@@ -31,7 +31,7 @@ module.exports = function (args) {
         this._instruments.forEach(instrument => {
 
           // grab the current section for this instrument (verse, chorus, etc.)
-          var section = instrument.data[this.current]
+          var section = instrument.data[this._current]
 
           // if the section has a modulus value, see if this is it is on beat
           // i.e, mod 1: every beat, mod 2: every other beat
@@ -66,11 +66,11 @@ module.exports = function (args) {
               // if we have played the loop some number of increments of the advanceModulus...
               if (this._counter % this.advanceMod === 0) {
                 // ... pick a new section to play
-                this.current = pick(this._structure[this.current])
+                this._current = pick(this._structure[this._current])
               }
 
               // if the new section is null or some other junk
-              if (typeof this.current !== 'number') {
+              if (typeof this._current !== 'number') {
                 // the end of the song! erm, what to do here?
                 // might want to be able to attach an onEnd callback thing
                 // especially for mediaRecorder...
