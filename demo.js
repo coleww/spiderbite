@@ -4,7 +4,7 @@ var ac = new window.AudioContext()
 var pie = require('pie-ano')(ac)
 pie.connect(ac.destination)
 
-seq.bind(true, function (data, section, config) {
+seq.bind(true, function (data, section) {
   // here, just using the data value to play a midi note.
   // might also map it to a scale, or do other stuff, or whatever u want really GET WILD
   console.log(data)

@@ -5,7 +5,7 @@ var sb = require('./')
 tap.test('runs for 4 ticks and then stops, playing 4 notes', function (t) {
   t.plan(5)
   var spiderbite = sb({bpm: 1000})
-  spiderbite.bind(true, function (data, section, config) {
+  spiderbite.bind(true, function (data, section) {
     t.equal(data, section.tick)
   }, [{
       data: [
@@ -31,7 +31,7 @@ tap.test('runs for 4 ticks and then stops, playing 4 notes', function (t) {
 tap.test('runs for 4 ticks and then stops, playing 0 notes', function (t) {
   t.plan(1)
   var spiderbite = sb({bpm: 1000})
-  spiderbite.bind(true, function (data, section, config) {
+  spiderbite.bind(true, function (data, section) {
     t.equal(data, section.tick)
   }, [{
       data: [
@@ -57,7 +57,7 @@ tap.test('runs for 4 ticks and then stops, playing 0 notes', function (t) {
 tap.test('runs through different sections', function (t) {
   t.plan(10)
   var spiderbite = sb({bpm: 1000})
-  spiderbite.bind(true, function (data, section, config) {
+  spiderbite.bind(true, function (data, section) {
     t.equal(data, section.tick)
   }, [{
       data: [
@@ -97,7 +97,7 @@ tap.test('runs through different sections', function (t) {
 tap.test('runs through different sections of multiple stuff dealing with moduluses as well', function (t) {
   t.plan(25)
   var spiderbite = sb({bpm: 1000})
-  spiderbite.bind(true, function (data, section, config) {
+  spiderbite.bind(true, function (data, section) {
     t.equal(data, section.tick)
   }, [{
       data: [
@@ -113,7 +113,7 @@ tap.test('runs through different sections of multiple stuff dealing with modulus
       current: 0,
       tick: 0
   }])
-  spiderbite.bind(false, function (data, section, config) {
+  spiderbite.bind(false, function (data, section) {
     t.equal(data, section.tick)
   }, [{
       data: [
