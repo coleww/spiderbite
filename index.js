@@ -7,6 +7,7 @@ module.exports = function (args) {
     _counter: 0, // increments each loop
     _tick: 0, // increments each interval/beat
     _current: 0, // which section for each inst (verse, chorus, etc.)
+    _nextCurrent: 0, // which section will be played next
     _instruments: [], // the instruments, lol
     _structure: undefined, // how to jump between the larger patterns
     onEnd: undefined, // called when the structure hits a `null`
@@ -48,8 +49,8 @@ module.exports = function (args) {
             instrument.play(pick(section.data[section._current][section._tick]), section)
           }
 
-          if (instrument.lead && onItsBeat && section._tick === 0 && ((this._counter + 1) % this.advanceMod === 0)) {
-            this._nextCurrent = pick(this._structure[this._current])
+          if (instrument.lead && onItsBeat && section._tick === 0) {
+            if ((this._counter + 1) % this.advanceMod === 0) this._nextCurrent = pick(this._structure[this._current])
             if (this.onSectionStart) this.onSectionStart(this._current !== this._nextCurrent)
           }
 
