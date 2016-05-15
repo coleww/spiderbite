@@ -1,5 +1,17 @@
 spiderbite
 ----------------
+//   BOUND DATA:
+//   More callbacks
+//      callback when section is going to update
+//      a callback when section updates
+//      it has access to this, so can figure out what to do from there
+//   "fills" before section updates
+//      maybe just add a single additional "fill" object that gets played only when the global section is about to change
+//   pass the instrument-or-justthepattern object to the play method
+//      would make it easier to do things like have different FX or other shifts based on section (i.e, clean verse distorted chorus, etc. )
+//      // oh gosh hrm is there some way that the "sectionWillUpdate" thing could like, fade stuff in? hrrrrrrrrrrrrrrm.
+//   make the "roll" method configurable
+//      might be cool to have a per-pattern/instrument or global value that occasionally flips it from < to >
 
 a generative sequencer, intended for web-audio but ostensibly useful for other things
 
@@ -31,3 +43,5 @@ the probability of something happening on a given beat. our simple dance rock be
 ...
 
 ...
+
+- every pattern has data, probs, nexts, and config. stuff in config will get sensible defaults if not present
