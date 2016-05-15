@@ -27,8 +27,6 @@ module.exports = function (args) {
       this._instruments.sort((a, b) => a.lead ? 1 : (b.lead ? -1 : 0))
 
       this._interval = setInterval(() => {
-        // advance the global counter
-        this._tick++
 
         this._instruments.forEach(instrument => {
 
@@ -38,8 +36,10 @@ module.exports = function (args) {
           // if the section has a modulus value, see if this is it is on beat
           // i.e, mod 1: every beat, mod 2: every other beat
           // useful for creating breakdowns and bass drops
-          var onItsBeat = this._tick % (section.config.mod || 1) === 0
-
+          var modulus = (section.config.mod || 1)
+          var onItsBeat = this._tick % modulus === 0
+          // also check if the instrument will play on the next turn, otherwise we will end patterns too soon
+          var willPlayOnNextBeat = (this._tick + 1) % modulus === 0
           // if the instrument is on it's beat, and wins the dice roll
           if (onItsBeat && this._roll(section.probs[section._current][section._tick])) {
 
@@ -50,8 +50,8 @@ module.exports = function (args) {
           // advance the counter for this section
           if (onItsBeat) section._tick++
 
-          // if we are at the end of a section
-          if (section._tick === section.probs[section._current].length) {
+          // if we are at the end of a section AND this instrument will play on the next beat
+          if (section._tick === section.probs[section._current].length && willPlayOnNextBeat) {
 
             // reset the counter for this section
             section._tick = 0
@@ -80,6 +80,9 @@ module.exports = function (args) {
             }
           }
         })
+
+        // advance the global counter
+        this._tick++
       }, 60000.0 / this.bpm)
     },
 
