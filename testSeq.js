@@ -144,8 +144,8 @@ tap.test('runs through different sections of multiple stuff dealing with modulus
   spiderbite.start()
 })
 
-tap.test('runs through different sections with moduluses and calls section starts appropriately', function (t) {
-  t.plan(23)
+tap.test('runs through different sections with moduluses and fills and calls section starts appropriately', function (t) {
+  t.plan(21)
   var spiderbite = sb({bpm: 1000, advanceMod: 2})
   spiderbite.bind(true, function (data, section) {
     t.equal(data, section._tick)
@@ -156,6 +156,10 @@ tap.test('runs through different sections with moduluses and calls section start
       probs: [
         [1, 1, 1, 1]
       ],
+      fill: {
+        data: [[0], [1], [2], [3]],
+        probs: [1, 0, 1, 0]
+      },
       nexts: [
         [0]
       ],

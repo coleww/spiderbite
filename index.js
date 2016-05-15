@@ -42,16 +42,26 @@ module.exports = function (args) {
           var onItsBeat = this._tick % modulus === 0
           // also check if the instrument will play on the next turn, otherwise we will end patterns too soon
           var willPlayOnNextBeat = (this._tick + 1) % modulus === 0
+
+          var willAdvanceOnNextBeat = (this._counter + 1) % this.advanceMod === 0
+
+          if (instrument.lead && onItsBeat && section._tick === 0) {
+            if (willAdvanceOnNextBeat) this._nextCurrent = pick(this._structure[this._current])
+            if (this.onSectionStart) this.onSectionStart(this._current !== this._nextCurrent)
+          }
+
+          // if the section has a fill, and the pattern is gonna change next turn
+          if (onItsBeat && section.fill && (this._current !== this._nextCurrent)) {
+             // if the instrument is on it's beat, and wins the dice roll, play the fill
+            if (onItsBeat && this._roll(section.fill.probs[section._tick])) {
+              // play the FILLLLLLLLLL for that instrument, passing along a randomly chosen data  for that beat, along with the entire section object
+              instrument.play(pick(section.fill.data[section._tick]), section)
+            }
           // if the instrument is on it's beat, and wins the dice roll
-          if (onItsBeat && this._roll(section.probs[section._current][section._tick])) {
+          } else if (onItsBeat && this._roll(section.probs[section._current][section._tick])) {
 
             // play the instrument, passing along a randomly chosen data  for that beat, along with the entire section object
             instrument.play(pick(section.data[section._current][section._tick]), section)
-          }
-
-          if (instrument.lead && onItsBeat && section._tick === 0) {
-            if ((this._counter + 1) % this.advanceMod === 0) this._nextCurrent = pick(this._structure[this._current])
-            if (this.onSectionStart) this.onSectionStart(this._current !== this._nextCurrent)
           }
 
           // advance the counter for this section
